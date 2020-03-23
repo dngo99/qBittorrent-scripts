@@ -1,4 +1,9 @@
 #!/bin/bash
+# Processes anime
+
+set -e
+set -u
+set -o pipefail
 
 dst=""
 verbose="false"
@@ -178,6 +183,6 @@ elif [ $# -eq 2 ] && [ -e "$1" ]; then
 	cd "$(dirname "$1")"
 	parse "$(basename "$1")"
 else
-	echo "Usage: $0 -v|v source destination"
+	echo "Usage: $0 [-v] source destination"
 fi
 exit 0

@@ -1,24 +1,25 @@
 #!/bin/bash
+# Managers other post download scripts for qBittorrent
 
-SRC="$2"
-API_KEY=""
-DST=""
+set -e
+set -u
+set -o pipefail
 
-LOG_PATH="$(pwd)/qBittorrent-script.log"
-
-#echo "%L: "$1 >> $LOG_PATH
-#echo "%F: "$2 >> $LOG_PATH
-#echo "%R: "$3 >> $LOG_PATH
-#echo "%D: "$4 >> $LOG_PATH
-
-if [ "$1" != "Anime" ]; then
-	exit 0
-fi
+CATEGORY="$1"
+SOURCE="$2"
+DESTINATION="$3"
+LOG="$(pwd)/qBittorrent-scripts.log"
 
 sleep 120s
-./process-anime.bash -v "$SRC" "$DST" >> $LOG_PATH
-if [ -d "$SRC" ]; then
-	rmdir "$SRC" >> $LOG_PATH
-fi
-curl -X POST "https://jf.pyras.duckdns.org/emby/Library/Refresh?api_key=$API_KEY" -d "" -i | grep HTTP | perl -ne 'print "Jellyfin:  $_"'>> $LOG_PATH
+
+case $CATEGORY in 
+    "Anime" | "anime")
+        ./process-anime.bash "$SOURCE" "$DESTINATION" >> $LOG
+        ./update-jellyfin.bash >> $LOG
+        ;;
+    "Movie" | "movie")
+        ;;
+    *)
+        ;;
+esac
 exit 0
